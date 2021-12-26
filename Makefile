@@ -16,17 +16,8 @@ build:
 deploy: build
 	rsync -ravP $(FILES) derek@$(HOST):~/auth-file-server/
 
-test-connect:
-	$(shell source env-secret.bash)	
-	curl -X POST https://$(HOST):5001
-
 work:
 	emacs *.go problem.xml 
-
-create-passfile:
-	@rm -f passfile
-	#@htpasswd -cb ./passfile ${GRADER_CONSUMER} ${GRADER_SECRET}
-	@htpasswd -cb ./passfile john happy
 
 serve: FORCE
 	@killall auth-file-server || true
