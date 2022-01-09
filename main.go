@@ -20,7 +20,7 @@ const version = "1.0.1"
 
 var (
 	secret   = flag.String("secret", "", "Default secret for use during testing")
-	consumer = flag.String("consumer", "", "Def consumer")
+	consumer = flag.String("consumer", "", "Default consumer")
 	// host        = flag.String("host", "", "host name")
 	// port        = flat.String("port", "", "port number")
 	httpAddress = flag.String("https", "www.mathtech.org:5001", "Listen to")
@@ -68,7 +68,7 @@ func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 		fmt.Fprintf(w, `{"error": "labname missing from form data"}`)
 	}
 
-	jsondata, err := GetNotebookData(userid, labname)
+	jsondata, err := GetAnswerData(userid, labname)
 	if err != nil {
 		fmt.Fprintf(w, `{"error": "%s"}`, err.Error())
 	}
@@ -79,9 +79,8 @@ func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 // this definitely needs to change to work with kubernetes. Currently
 // the jupyter notebook data is being reading from file in the user
 // home directory.
-func GetNotebookData(userid string, labName string) (string, error) {
-
-	fmtStr := "/home/jupyter-%s/%s.ipynb"
+func GetAnswerData(userid string, labName string) (string, error) {
+	fmtStr := "/home/%s/%s"
 	filename := fmt.Sprintf(fmtStr, strings.ToLower(userid), labName)
 	bs, err := ioutil.ReadFile(filename)
 	notebookData := string(bs)
