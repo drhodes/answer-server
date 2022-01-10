@@ -57,18 +57,23 @@ func secretPass(user, realm string) string {
 }
 
 func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
-	// Grab the use userid and labname from the request.
+	// Grab the use userid and answerpath from the request.
+
+	// userid will look like: jupyter-35dd7e9124c8847ec5-030ef
+	
 	userid := r.FormValue("userid")
-	labname := r.FormValue("labname")
+
+	
+	answerpath := r.FormValue("answerpath")
 
 	if userid == "" {
 		fmt.Fprintf(w, `{"error": "userid missing from form data"}`)
 	}
-	if labname == "" {
-		fmt.Fprintf(w, `{"error": "labname missing from form data"}`)
+	if answerpath == "" {
+		fmt.Fprintf(w, `{"error": "answerpath missing from form data"}`)
 	}
 
-	jsondata, err := GetAnswerData(userid, labname)
+	jsondata, err := GetAnswerData(userid, answerpath)
 	if err != nil {
 		fmt.Fprintf(w, `{"error": "%s"}`, err.Error())
 	}
@@ -83,12 +88,12 @@ func GetAnswerData(userid string, labName string) (string, error) {
 	fmtStr := "/home/%s/%s"
 	filename := fmt.Sprintf(fmtStr, strings.ToLower(userid), labName)
 	bs, err := ioutil.ReadFile(filename)
-	notebookData := string(bs)
+	answerData := string(bs)
 
 	if err != nil {
-		return "", errors.New("Couldn't find notebook data" + err.Error())
+		return "", errors.New("Couldn't find answer data" + err.Error())
 	} else {
-		log.Println(notebookData)
-		return notebookData, nil
+		log.Println(answerData)
+		return answerData, nil
 	}
 }
