@@ -65,6 +65,17 @@ func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	// example answerpath: jupyter-answer-magic/test/test_autograde1.json
 	answerpath := r.FormValue("answerpath")
 
+
+	// TODO this error handling needs to be done better.  there should
+	// be an "ok" field for the client to check. for example:
+
+	// if the answer data is found then return
+	// {"ok": "true", "answerdata": "<...all the stuff...>"
+
+	// otherwise
+	// {"ok": "false", "error": "<reason for the failure>"}
+	
+	
 	if userid == "" {
 		fmt.Fprintf(w, `{"error": "userid missing from form data"}`)
 	}
