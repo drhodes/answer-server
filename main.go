@@ -60,10 +60,9 @@ func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	// Grab the use userid and answerpath from the request.
 
 	// userid will look like: jupyter-35dd7e9124c8847ec5-030ef
-	
 	userid := r.FormValue("userid")
 
-	
+	// example answerpath: jupyter-answer-magic/test/test_autograde1.json
 	answerpath := r.FormValue("answerpath")
 
 	if userid == "" {
