@@ -3,7 +3,7 @@ SHELL := /bin/bash
 HOST=www.mathtech.org
 KEY=./acme-utils/key.pem
 CERT=./acme-utils/certificiate.pem
-FILES=auth-file-server Makefile env-secret.bash 
+FILES=auth-file-server Makefile env-secret.bash *.go go.mod go.sum
 GO=/home/derek/bin/go/bin/go
 
 include env-secret.bash
