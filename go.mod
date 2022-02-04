@@ -1,4 +1,4 @@
-module auth-file-server
+module answer-server
 
 go 1.17
 
