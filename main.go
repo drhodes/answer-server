@@ -83,11 +83,11 @@ func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 		fmt.Fprintf(w, `{"error": "answerpath missing from form data"}`)
 	}
 
+	log.Println(r)
 	jsondata, err := GetAnswerData(userid, answerpath)
 	if err != nil {
 		fmt.Fprintf(w, `{"error": "%s"}`, err.Error())
 	}
-
 	fmt.Fprintf(w, "%s", jsondata)
 }
 
@@ -95,6 +95,9 @@ func handler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 // the jupyter notebook data is being reading from file in the user
 // home directory.
 func GetAnswerData(userid string, labName string) (string, error) {
+	log.Println("GettingAnswerData")
+	log.Println(userid)
+	log.Println(labName)
 	fmtStr := "/home/%s/%s"
 	filename := fmt.Sprintf(fmtStr, strings.ToLower(userid), labName)
 	bs, err := ioutil.ReadFile(filename)
@@ -107,3 +110,14 @@ func GetAnswerData(userid string, labName string) (string, error) {
 		return answerData, nil
 	}
 }
+
+// ------------------------------------------------------------------
+// data store.
+//
+
+/*
+   flat files
+
+   ./student-answers/userid/labname/file.json
+
+*/
