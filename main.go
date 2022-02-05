@@ -11,6 +11,7 @@ import (
 
 	"github.com/abbot/go-http-auth"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 const version = "1.0.1"
@@ -61,15 +62,16 @@ func secretPass(user, realm string) string {
 }
 
 func submitAnswerHandler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
+	log.Println("got request for submit-answers")
 	// the submission server in the kubernetes cluster will be
 	// originating the requests in this handler.
-	anonEdxId := r.FormValue("edx-anon-id")
+	edxAnonId := r.FormValue("edx-anon-id")
 	// TODO introduce "labname" across magic, xblock, submit server.
 	labName := r.FormValue("labname")
 	labAnswerBytes := r.FormValue("lab-answers")
 
-	globalStore.InsertAnswer(anonEdxId, labName, string(labAnswerBytes))
-	log.Println(anonEdxId, labName, string(labAnswerBytes))
+	globalStore.InsertAnswer(edxAnonId, labName, string(labAnswerBytes))
+	log.Println(edxAnonId, labName, string(labAnswerBytes))
 }
 
 func getJupDataHandler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
@@ -91,7 +93,14 @@ func getJupDataHandler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 	sub, err := globalStore.GetAnswers(edxAnonId, labName)
 	if err != nil {
 		log.Println(err)
-		fmt.Fprintf(w, `{"error": "%s"}`, err.Error())
+
+		switch err {
+		case gorm.ErrRecordNotFound:
+			msg := fmt.Sprintf("answers could not be found for this lab: %s, %s", labName, err.Error())
+			fmt.Fprintf(w, `{"error": %s"}`, msg)
+		default:
+			fmt.Fprintf(w, `{"error": "%s"}`, err.Error())
+		}
 	} else {
 		fmt.Fprintf(w, sub.LabAnswers)
 	}

@@ -66,7 +66,7 @@ func (store SqlStore) GetAnswers(edxAnonId, labName string) (LabSubmission, erro
 	log.Println("This is what the database got: ", labSub)
 
 	if err != nil {
-		return labSub, Err(err, "Could not get answers")
+		return labSub, err
 	} else {
 		return labSub, nil
 	}

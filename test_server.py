@@ -9,7 +9,7 @@ def test_get_answers():
     req = requests.Request(url=url,
                            method="POST",
                            data={
-                               "edx-anon-id":"jupyter-35dd7e9124c8847ec5-030ef",
+                               "edx-anon-id":"jupyter-776d8333665959ef9c-4455e",
                                "labname":"SimpleLab1",
                            },                           
                            auth=(consumer, secret))
@@ -26,7 +26,7 @@ def test_submit_answers():
     req = requests.Request(url=url,
                            method="POST",
                            data={
-                               "edx-anon-id":"jupyter-35dd7e9124c8847ec5-030ef",
+                               "edx-anon-id":"jupyter-776d8333665959ef9c-4455e",
                                "labname":"SimpleLab1",
                                "lab-answers":'{"q1": 2, "q2": 5}',
                            },                           
